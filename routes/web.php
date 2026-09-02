@@ -1,11 +1,15 @@
 <?php
 
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource('events', EventController::class)->except(['index', 'show'])->middleware('auth');
+Route::resource('events', EventController::class)->only(['index', 'show']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

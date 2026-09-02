@@ -9,15 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-  public function up(): void
+    public function up(): void
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('titre');
-            $table->text('description'); 
-            $table->dateTime('date');    
+            $table->text('description');
+            $table->dateTime('date');
             $table->string('lieu');
-            $table->string('cover_path')->nullable(); 
+            $table->string('cover_path')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
