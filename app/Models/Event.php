@@ -17,4 +17,19 @@ class Event extends Model
             'date' => 'datetime',
         ];
     }
+
+    public function organizer()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    public function participants()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

@@ -11,6 +11,11 @@ Route::get('/', function () {
 Route::resource('events', EventController::class)->except(['index', 'show'])->middleware('auth');
 Route::resource('events', EventController::class)->only(['index', 'show']);
 
+Route::middleware('auth')->group(function () {
+    Route::post('events/{event}/inscription', [EventController::class, 'register'])->name('events.register');
+    Route::delete('events/{event}/inscription', [EventController::class, 'unregister'])->name('events.unregister');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

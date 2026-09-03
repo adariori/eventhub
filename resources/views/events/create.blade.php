@@ -29,6 +29,19 @@
         @error('lieu') <span style="color: red;">{{ $message }}</span> @enderror
     </p>
 
+    <p>
+        <span>Catégories :</span><br>
+        @foreach ($categories as $categorie)
+            <label>
+                <input type="checkbox" name="categories[]" value="{{ $categorie->id }}"
+                    @checked(in_array($categorie->id, old('categories', [])))>
+                {{ $categorie->nom }}
+            </label><br>
+        @endforeach
+        @error('categories') <span style="color: red;">{{ $message }}</span> @enderror
+        @error('categories.*') <span style="color: red;">{{ $message }}</span> @enderror
+    </p>
+
     <button type="submit">Créer l'événement</button>
 
 </form>

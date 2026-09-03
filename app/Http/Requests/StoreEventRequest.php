@@ -27,6 +27,8 @@ class StoreEventRequest extends FormRequest
             'description' => 'required|string|min:10',
             'date' => 'required|date|after:today',
             'lieu' => 'required|string|min:2|max:255',
+            'categories' => 'nullable|array',
+            'categories.*' => 'integer|exists:categories,id',
         ];
     }
 }

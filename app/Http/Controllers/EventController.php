@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
+use App\Models\Category;
 use App\Models\Event;
+use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
@@ -23,7 +25,9 @@ class EventController extends Controller
      */
     public function create()
     {
-        return view('events.create');
+        $categories = Category::orderBy('nom')->get();
+
+        return view('events.create', compact('categories'));
     }
 
     /**
@@ -31,10 +35,9 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
-        $event = Event::create([
-            ...$request->validated(),
-            'user_id' => $request->user()->id,
-        ]);
+        $event = $request->user()->organizedEvents()->create($request->safe()->except('categories'));
+
+        $event->categories()->sync($request->validated()['categories'] ?? []);
 
         return redirect()->route('events.show', $event)->with('status', 'Événement créé.');
     }
@@ -73,5 +76,25 @@ class EventController extends Controller
         $event->delete();
 
         return redirect()->route('events.index')->with('status', 'Événement supprimé.');
+    }
+
+    /**
+     * Register the authenticated user as a participant.
+     */
+    public function register(Request $request, Event $event)
+    {
+        $event->participants()->syncWithoutDetaching([$request->user()->id]);
+
+        return back()->with('status', 'Inscription confirmée.');
+    }
+
+    /**
+     * Remove the authenticated user from the participants.
+     */
+    public function unregister(Request $request, Event $event)
+    {
+        $event->participants()->detach($request->user()->id);
+
+        return back()->with('status', 'Désinscription effectuée.');
     }
 }

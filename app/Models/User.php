@@ -29,4 +29,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function organizedEvents()
+    {
+        return $this->hasMany(Event::class);
+    }
+
+    public function attendedEvents()
+    {
+        return $this->belongsToMany(Event::class);
+    }
 }

@@ -16,6 +16,21 @@
     <button type="submit">Supprimer</button>
 </form>
 
+@auth
+    @if ($event->participants->contains(auth()->id()))
+        <form action="{{ route('events.unregister', $event) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit">Se désinscrire</button>
+        </form>
+    @else
+        <form action="{{ route('events.register', $event) }}" method="POST">
+            @csrf
+            <button type="submit">S'inscrire</button>
+        </form>
+    @endif
+@endauth
+
 <p><a href="{{ route('events.index') }}">Retour à la liste</a></p>
 
 </x-layout>
