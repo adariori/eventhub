@@ -7,13 +7,17 @@
 <p>{{ $event->description }}</p>
 
 <p>
+    @can('update', $event)
     <a href="{{ route('events.edit', $event) }}">Modifier</a>
+    @endcan
 </p>
 
 <form action="{{ route('events.destroy', $event) }}" method="POST" onsubmit="return confirm('Supprimer cet événement ?');">
     @csrf
     @method('DELETE')
+     @can('delete', $event)
     <button type="submit">Supprimer</button>
+    @endcan
 </form>
 
 @auth

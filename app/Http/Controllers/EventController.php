@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateEventRequest;
 use App\Models\Category;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class EventController extends Controller
 {
@@ -55,6 +56,8 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
+        Gate::authorize('update', $event);
+
         return view('events.edit', compact('event'));
     }
 
@@ -63,6 +66,7 @@ class EventController extends Controller
      */
     public function update(UpdateEventRequest $request, Event $event)
     {
+        Gate::authorize('update', $event);
         $event->update($request->validated());
 
         return redirect()->route('events.show', $event)->with('status', 'Événement mis à jour.');
@@ -73,6 +77,7 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
+        Gate::authorize('delete', $event);
         $event->delete();
 
         return redirect()->route('events.index')->with('status', 'Événement supprimé.');
