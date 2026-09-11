@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
@@ -36,7 +37,13 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
-        $event = $request->user()->organizedEvents()->create($request->safe()->except('categories'));
+        $data = $request->safe()->except('categories');
+
+        if ($request->hasFile('cover')) {
+            $data['cover_path'] = $request->file('cover')->store('covers', 'public');
+        }
+
+        $event = $request->user()->organizedEvents()->create($data);
 
         $event->categories()->sync($request->validated()['categories'] ?? []);
 
@@ -67,7 +74,18 @@ class EventController extends Controller
     public function update(UpdateEventRequest $request, Event $event)
     {
         Gate::authorize('update', $event);
-        $event->update($request->validated());
+
+        $data = $request->validated();
+
+        if ($request->hasFile('cover')) {
+            if ($event->cover_path) {
+                Storage::disk('public')->delete($event->cover_path);
+            }
+
+            $data['cover_path'] = $request->file('cover')->store('covers', 'public');
+        }
+
+        $event->update($data);
 
         return redirect()->route('events.show', $event)->with('status', 'Événement mis à jour.');
     }
@@ -78,6 +96,11 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         Gate::authorize('delete', $event);
+
+        if ($event->cover_path) {
+            Storage::disk('public')->delete($event->cover_path);
+        }
+
         $event->delete();
 
         return redirect()->route('events.index')->with('status', 'Événement supprimé.');

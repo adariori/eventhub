@@ -1,7 +1,7 @@
 <x-layout>
     <h1>Modifier : {{ $event->titre }}</h1>
 
-  <form action="{{ route('events.update', $event) }}" method="POST">
+  <form action="{{ route('events.update', $event) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -27,6 +27,12 @@
         <label>lieu</label>
         <input type="text" name="lieu" value="{{ old('lieu', $event->lieu) }}">
         @error('lieu') <span style="color: red;">{{ $message }}</span> @enderror
+    </p>
+
+      <p>
+        <label>Image de couverture :</label><br>
+        <input type="file" name="cover">
+        @error('cover') <span style="color: red;">{{ $message }}</span> @enderror
     </p>
 
         <button type="submit">Enregistrer les modifications</button>

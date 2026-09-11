@@ -29,6 +29,7 @@ class StoreEventRequest extends FormRequest
             'lieu' => 'required|string|min:2|max:255',
             'categories' => 'nullable|array',
             'categories.*' => 'integer|exists:categories,id',
+            'cover' => 'nullable|image|max:2048',
         ];
     }
 }

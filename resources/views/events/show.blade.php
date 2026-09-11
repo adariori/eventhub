@@ -12,6 +12,10 @@
     @endcan
 </p>
 
+@if ($event->cover_path)
+<img src="{{ Storage::url($event->cover_path) }}" alt="Couverture" style="max-width: 100%;">
+@endif
+
 <form action="{{ route('events.destroy', $event) }}" method="POST" onsubmit="return confirm('Supprimer cet événement ?');">
     @csrf
     @method('DELETE')

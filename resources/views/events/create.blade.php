@@ -2,7 +2,7 @@
 
 <h1>Créer un événement</h1>
 
-<form action="{{ route('events.store') }}" method="post">
+<form action="{{ route('events.store') }}" method="post" enctype="multipart/form-data">
     @csrf
 
     <p>
@@ -40,6 +40,13 @@
         @endforeach
         @error('categories') <span style="color: red;">{{ $message }}</span> @enderror
         @error('categories.*') <span style="color: red;">{{ $message }}</span> @enderror
+    </p>
+
+    <p>
+        <label>Image de couverture :</label>
+        <input type="file" name="cover">
+        @error('cover') <span style="color: red;">{{ $message }}</span>
+        @enderror
     </p>
 
     <button type="submit">Créer l'événement</button>
