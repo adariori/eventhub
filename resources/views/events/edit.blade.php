@@ -1,52 +1,69 @@
-<x-layout>
-    <h1>Modifier : {{ $event->titre }}</h1>
+<x-layout titre="Modifier {{ $event->titre }}">
 
-  <form action="{{ route('events.update', $event) }}" method="POST" enctype="multipart/form-data">
+<h1 class="text-2xl font-bold text-gray-900 mb-6">Modifier : {{ $event->titre }}</h1>
+
+<div class="rounded-xl bg-white border border-gray-100 shadow-sm p-6">
+    <form action="{{ route('events.update', $event) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
-            <p>
-            <label>Titre :</label><br>
-            <input type="text" name="titre" value="{{ old('titre', $event->titre) }}">
-            @error('titre') <span style="color: red;">{{ $message }}</span> @enderror
-        </p>
+        <div>
+            <x-input-label for="titre" value="Titre" />
+            <x-text-input id="titre" name="titre" type="text" class="block mt-1 w-full" :value="old('titre', $event->titre)" />
+            <x-input-error :messages="$errors->get('titre')" class="mt-2" />
+        </div>
 
-        <p>
-            <label>Description :</label><br>
-            <textarea name="description">{{ old('description', $event->description) }}</textarea>
-            @error('description') <span style="color: red;">{{ $message }}</span> @enderror
-        </p>
+        <div class="mt-4">
+            <x-input-label for="description" value="Description" />
+            <textarea id="description" name="description" rows="5"
+                class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('description', $event->description) }}</textarea>
+            <x-input-error :messages="$errors->get('description')" class="mt-2" />
+        </div>
 
-    <p>
-        <label>Date :</label>
-        <input type="datetime-local" name="date" value="{{ old('date', $event->date?->format('Y-m-d\TH:i')) }}">
-        @error('date') <span style="color: red;">{{ $message }}</span> @enderror
-    </p>
+        <div class="mt-4">
+            <x-input-label for="date" value="Date" />
+            <x-text-input id="date" name="date" type="datetime-local" class="block mt-1 w-full"
+                :value="old('date', $event->date?->format('Y-m-d\TH:i'))" />
+            <x-input-error :messages="$errors->get('date')" class="mt-2" />
+        </div>
 
-    <p>
-        <label>lieu</label>
-        <input type="text" name="lieu" value="{{ old('lieu', $event->lieu) }}">
-        @error('lieu') <span style="color: red;">{{ $message }}</span> @enderror
-    </p>
+        <div class="mt-4">
+            <x-input-label for="lieu" value="Lieu" />
+            <x-text-input id="lieu" name="lieu" type="text" class="block mt-1 w-full" :value="old('lieu', $event->lieu)" />
+            <x-input-error :messages="$errors->get('lieu')" class="mt-2" />
+        </div>
 
-      <p>
-        <label>Image de couverture :</label><br>
-        <input type="file" name="cover">
-        @error('cover') <span style="color: red;">{{ $message }}</span> @enderror
-    </p>
+        <div class="mt-4">
+            <x-input-label for="cover" value="Image de couverture" />
 
-    <p>
-        <span>Catégories :</span><br>
-        @foreach ($categories as $categorie)
-            <label>
-                <input type="checkbox" name="categories[]" value="{{ $categorie->id }}"
-                    @checked(in_array($categorie->id, old('categories', $event->categories->pluck('id')->all())))>
-                {{ $categorie->nom }}
-            </label><br>
-        @endforeach
-        @error('categories') <span style="color: red;">{{ $message }}</span> @enderror
-    </p>
+            @if ($event->cover_path)
+                <img src="{{ Storage::url($event->cover_path) }}" alt="Couverture actuelle" class="mt-2 h-32 rounded-md object-cover">
+            @endif
 
-        <button type="submit">Enregistrer les modifications</button>
+            <input id="cover" name="cover" type="file"
+                class="block mt-2 w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:uppercase file:tracking-widest file:bg-indigo-600 file:text-white hover:file:bg-indigo-500">
+            <x-input-error :messages="$errors->get('cover')" class="mt-2" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label value="Catégories" />
+            <div class="mt-2 flex flex-wrap gap-x-6 gap-y-2">
+                @foreach ($categories as $categorie)
+                    <label class="inline-flex items-center gap-2 text-sm text-gray-700">
+                        <input type="checkbox" name="categories[]" value="{{ $categorie->id }}"
+                            @checked(in_array($categorie->id, old('categories', $event->categories->pluck('id')->all())))
+                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                        {{ $categorie->nom }}
+                    </label>
+                @endforeach
+            </div>
+            <x-input-error :messages="$errors->get('categories')" class="mt-2" />
+        </div>
+
+        <div class="mt-6 flex justify-end">
+            <x-primary-button>Enregistrer les modifications</x-primary-button>
+        </div>
     </form>
+</div>
+
 </x-layout>

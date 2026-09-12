@@ -23,7 +23,7 @@ class EventFactory extends Factory
             'description' => fake()->paragraphs(3, true),
             'date' => $this->faker->dateTimeBetween('now', '+6 months'),
             'lieu' => $this->faker->city(),
-            'cover_path' => 'covers/'.$this->faker->uuid(),
+            'cover_path' => null,
             'user_id' => User::factory(),
         ];
     }

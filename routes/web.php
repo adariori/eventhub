@@ -1,5 +1,29 @@
 <?php
 
+/**
+ * @author    ARIORI OLOROUNKO Adéliyi Odjouola Moshood
+ *
+ * @github    https://github.com/adariori
+ *
+ * @web       https://portefolio-nine-iota.vercel.app/
+ *
+ * @contact   adariori3@gmail.com
+ *
+ * @location  Cotonou, Benin
+ *
+ * @project   EventHub
+ *
+ * @version   1.0.0
+ *
+ * @year      2026
+ *
+ * @stack     Laravel 13 (PHP 8.5), Tailwind CSS 3, Sanctum, Pest
+ *
+ * @license   MIT License
+ *            © 2026 ARIORI OLOROUNKO Adéliyi Odjouola Moshood
+ *            Permission is hereby granted, free of charge, to use, copy, modify, merge, publish, distribute, sublicense.
+ */
+
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;

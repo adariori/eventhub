@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreEventRequest;
+use App\Http\Requests\UpdateEventRequest;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class EventController extends Controller
@@ -23,10 +24,10 @@ class EventController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreEventRequest $request)
     {
         $event = $request->user()->organizedEvents()->create(
-            $request->only(['titre', 'description', 'date', 'lieu'])
+            $request->safe()->only(['titre', 'description', 'date', 'lieu'])
         );
 
         return (new EventResource($event))->response()->setStatusCode(201);
@@ -45,11 +46,11 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateEventRequest $request, string $id)
     {
         $event = Event::findOrFail($id);
         Gate::authorize('update', $event);
-        $event->update($request->only(['titre', 'description', 'date', 'lieu']));
+        $event->update($request->safe()->only(['titre', 'description', 'date', 'lieu']));
 
         return new EventResource($event);
     }
