@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -35,6 +36,10 @@ class DatabaseSeeder extends Seeder
             $event->participants()->attach(
                 $users->random(rand(0, 5))->pluck('id')
             );
+
+            Comment::factory(rand(0, 4))
+                ->recycle($users)
+                ->create(['event_id' => $event->id]);
         }
     }
 }

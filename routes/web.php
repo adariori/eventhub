@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,8 @@ Route::resource('events', EventController::class)->only(['index', 'show']);
 Route::middleware('auth')->group(function () {
     Route::post('events/{event}/inscription', [EventController::class, 'register'])->name('events.register');
     Route::delete('events/{event}/inscription', [EventController::class, 'unregister'])->name('events.unregister');
+    Route::post('events/{event}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 });
 
 Route::get('/dashboard', function () {

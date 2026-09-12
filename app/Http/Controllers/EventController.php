@@ -15,11 +15,22 @@ class EventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $events = Event::latest()->get();
+        $categories = Category::orderBy('nom')->get();
 
-        return view('events.index', compact('events'));
+        $categorieId = $request->integer('categorie') ?: null;
+
+        $events = Event::with('categories')
+            ->when($categorieId, function ($query) use ($categorieId) {
+                $query->whereHas('categories', function ($query) use ($categorieId) {
+                    $query->where('categories.id', $categorieId);
+                });
+            })
+            ->latest()
+            ->get();
+
+        return view('events.index', compact('events', 'categories', 'categorieId'));
     }
 
     /**
@@ -55,6 +66,8 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
+        $event->load('organizer', 'categories', 'participants', 'comments.author');
+
         return view('events.show', compact('event'));
     }
 
@@ -115,6 +128,10 @@ class EventController extends Controller
      */
     public function register(Request $request, Event $event)
     {
+        if ($event->date->isPast()) {
+            return back()->with('error', 'Cet événement est déjà passé, inscription impossible.');
+        }
+
         $event->participants()->syncWithoutDetaching([$request->user()->id]);
 
         return back()->with('status', 'Inscription confirmée.');
