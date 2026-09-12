@@ -29,9 +29,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/events');
 
 Route::resource('events', EventController::class)->except(['index', 'show'])->middleware('auth');
 Route::resource('events', EventController::class)->only(['index', 'show']);
