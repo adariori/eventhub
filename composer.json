@@ -1,11 +1,12 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "adariori/eventhub",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Plateforme de gestion et de découverte d'événements construite avec Laravel.",
     "keywords": [
         "laravel",
-        "framework"
+        "eventhub",
+        "events"
     ],
     "license": "MIT",
     "require": {

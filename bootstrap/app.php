@@ -13,7 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Render (comme la plupart des PaaS) termine le HTTPS sur son propre
+        // proxy et transmet la requête en HTTP au conteneur. Sans faire
+        // confiance à ce proxy, Laravel générerait des URLs en http:// au
+        // lieu de https:// (redirections, liens absolus, assets Vite).
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
