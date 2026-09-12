@@ -28,6 +28,8 @@ class UpdateEventRequest extends FormRequest
             'date' => 'required|date|after_or_equal:today',
             'lieu' => 'required|string|min:2|max:255',
             'cover' => 'nullable|image|max:2048',
+            'categories' => 'nullable|array',
+            'categories.*' => 'integer|exists:categories,id',
         ];
     }
 }

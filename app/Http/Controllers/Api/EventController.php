@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class EventController extends Controller
 {
@@ -24,8 +25,8 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $event = $request->user()->events()->create(
-            $request->safe()->only(['titre'.'contenu'])
+        $event = $request->user()->organizedEvents()->create(
+            $request->only(['titre', 'description', 'date', 'lieu'])
         );
 
         return (new EventResource($event))->response()->setStatusCode(201);
@@ -37,7 +38,7 @@ class EventController extends Controller
     public function show(string $id)
     {
         return new EventResource(
-            Event::with('organizer'.'categories'.'tags')->findOrFail($id)
+            Event::with('organizer', 'categories')->findOrFail($id)
         );
     }
 
@@ -46,7 +47,11 @@ class EventController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $event = Event::findOrFail($id);
+        Gate::authorize('update', $event);
+        $event->update($request->only(['titre', 'description', 'date', 'lieu']));
+
+        return new EventResource($event);
     }
 
     /**
@@ -54,7 +59,9 @@ class EventController extends Controller
      */
     public function destroy(string $id)
     {
-        Event::findOrFail($id)->delete();
+        $event = Event::findOrFail($id);
+        Gate::authorize('delete', $event);
+        $event->delete();
 
         return response()->json(null, 204);
     }

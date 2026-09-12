@@ -35,6 +35,18 @@
         @error('cover') <span style="color: red;">{{ $message }}</span> @enderror
     </p>
 
+    <p>
+        <span>Catégories :</span><br>
+        @foreach ($categories as $categorie)
+            <label>
+                <input type="checkbox" name="categories[]" value="{{ $categorie->id }}"
+                    @checked(in_array($categorie->id, old('categories', $event->categories->pluck('id')->all())))>
+                {{ $categorie->nom }}
+            </label><br>
+        @endforeach
+        @error('categories') <span style="color: red;">{{ $message }}</span> @enderror
+    </p>
+
         <button type="submit">Enregistrer les modifications</button>
     </form>
 </x-layout>

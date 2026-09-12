@@ -65,7 +65,9 @@ class EventController extends Controller
     {
         Gate::authorize('update', $event);
 
-        return view('events.edit', compact('event'));
+        $categories = Category::orderBy('nom')->get();
+
+        return view('events.edit', compact('event', 'categories'));
     }
 
     /**
@@ -75,7 +77,7 @@ class EventController extends Controller
     {
         Gate::authorize('update', $event);
 
-        $data = $request->validated();
+        $data = $request->safe()->except('categories');
 
         if ($request->hasFile('cover')) {
             if ($event->cover_path) {
@@ -86,6 +88,8 @@ class EventController extends Controller
         }
 
         $event->update($data);
+
+        $event->categories()->sync($request->validated()['categories'] ?? []);
 
         return redirect()->route('events.show', $event)->with('status', 'Événement mis à jour.');
     }
